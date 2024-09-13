@@ -1,6 +1,6 @@
 "use client";
 
-import React, {useState} from 'react';
+import React, {useEffect, useState} from 'react';
 
 interface Ingredient {
     id: number,
@@ -24,6 +24,21 @@ const Cauldron: React.FC = () => {
     const [cauldron, setCauldron] = useState<Ingredient[]>([]);
     const maxIngredients = 5;
 
+    useEffect(() => {
+        const savedCauldron = localStorage.getItem('cauldron');
+        if (savedCauldron) {
+            setCauldron(JSON.parse(savedCauldron))
+        }
+    }, [])
+
+    useEffect(() => {
+        if(cauldron.length > 0) {
+            localStorage.setItem('cauldron', JSON.stringify(cauldron));
+        } else {
+            localStorage.removeItem('cauldron')
+        }
+    }, [cauldron])
+
     const addIngredient = (ingredient: Ingredient) => {
         if (cauldron.some((item) => item.id === ingredient.id)) {
             alert(`${ingredient.name} is already in the cauldron!`);
@@ -44,6 +59,7 @@ const Cauldron: React.FC = () => {
 
     const clearCauldron = () => {
         setCauldron([]);
+        localStorage.removeItem('cauldron');
     }
 
     return (
