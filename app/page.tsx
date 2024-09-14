@@ -16,15 +16,15 @@ export default function Home() {
                 in her cauldron, browse through her spellbook
             </p>
 
-            {/*<div className="mb-8">*/}
-            {/*    <Image*/}
-            {/*        src="/witch-house.jpg"*/}
-            {/*        className="rounded shadow-lg"*/}
-            {/*        alt="Witch house"*/}
-            {/*        width={600}*/}
-            {/*        height={400}>*/}
-            {/*        </Image>*/}
-            {/*</div>*/}
+            <div className="mb-8">
+                <Image
+                    src="/images/witch-house.jpg"
+                    className="rounded shadow-lg"
+                    alt="Witch house"
+                    width={600}
+                    height={400}>
+                    </Image>
+            </div>
 
             <nav className="mb-10">
                 <ul className="space-y-4">
