@@ -1,120 +1,103 @@
 "use client";
 
-import React, {useEffect, useState} from 'react';
+import React, { useState} from 'react';
 
 interface Ingredient {
-    id: number,
-    name: string
+    name: string,
+    quantity: string
 }
 
-const ingredientsList: Ingredient[] = [
-    {id: 1, name: "Chamomile"},
-    {id: 2, name: "Peppermint"},
-    {id: 3, name: "Echinacea"},
-    {id: 4, name: "St. John's Wort"},
-    {id: 5, name: "Lavender"},
-    {id: 6, name: "Ginseng"},
-    {id: 7, name: "Valerian"},
-    {id: 8, name: "Sage"},
-    {id: 9, name: "Ginger"},
-    {id: 10, name: "Aloe Vera"},
-]
-
 const Cauldron: React.FC = () => {
-    const [cauldron, setCauldron] = useState<Ingredient[]>([]);
-    const maxIngredients = 5;
 
-    useEffect(() => {
-        const savedCauldron = localStorage.getItem('cauldron');
-        if (savedCauldron) {
-            setCauldron(JSON.parse(savedCauldron))
-        }
-    }, [])
 
-    useEffect(() => {
-        if(cauldron.length > 0) {
-            localStorage.setItem('cauldron', JSON.stringify(cauldron));
-        } else {
-            localStorage.removeItem('cauldron')
-        }
-    }, [cauldron])
+    const [aviableIngredients, setAviableIngredients] = useState<Ingredient[]>([])
+    const [newIngredient, setNewIngredient] = useState({name: "", quantity: ""});
+    const [possibleRecipes, setPossibleRecipes] = useState<string[]>([]);
 
-    const addIngredient = (ingredient: Ingredient) => {
-        if (cauldron.some((item) => item.id === ingredient.id)) {
-            alert(`${ingredient.name} is already in the cauldron!`);
-            return;
-        }
-
-        if (cauldron.length >= maxIngredients) {
-            alert(`You can't add more than ${maxIngredients} ingredients!`);
-            return;
-        }
-
-        setCauldron([...cauldron, ingredient]);
+const addIngredient = () => {
+    if(newIngredient.name && newIngredient.quantity) {
+        setAviableIngredients([...aviableIngredients, newIngredient]);
+        setNewIngredient({name:"", quantity: ""});
+    } else {
+        alert("Need name and quantity");
     }
+};
 
-    const removeIngredient = (id: number) => {
-        setCauldron(cauldron.filter((item) => item.id !== id));
+const generateRecipes = () => {
+    if(aviableIngredients.length > 0) {
+        const dishes = aviableIngredients.map(
+            (ing)=>`You can make a dish using ${ing.quantity} ${ing.name}`
+        );
+        setPossibleRecipes(dishes);
+    }else {
+        alert("Please add some ingredients to generate possible dishes");
     }
+};
 
-    const clearCauldron = () => {
-        setCauldron([]);
-        localStorage.removeItem('cauldron');
-    }
+return (
+    <div className="p-8 bg-greeen-100 min-h-screen">
+        <h1 className="text-4xl font-bold mb-6">
+            Cauldron: enter your ingredients
+        </h1>
 
-    return (
-        <div className="bg-green-100 min-h-screen flex flex-col items-center py-10">
-            <h1 className="text-4xl font-bold text-green-800 mb-10">
-                Glenda witchy cauldron
-            </h1>
-            <div className="mb-10">
-                <h2 className="text-2xl font-semibold text-green-700 mb-4">
-                    Aviable ingredients
-                </h2>
-                <ul className="space-y-2">
-                    {ingredientsList.map((ingredient) => (
-                        <li className="flex justify-between items-center" key={ingredient.id}>
-                            <span>{ingredient.name}</span>
-                            <button
-                                className="ml-4 px-4 py-2 bg-green-900 text-white rounded hover:bg-green-950 transition"
-                                onClick={() => addIngredient(ingredient)}>
-                                Add
-                            </button>
+        <div className="mb-6">
+            <input
+                type="text"
+                placeholder="Ingredient name"
+                value={newIngredient.name}
+                onChange={(e) => setNewIngredient({...newIngredient, name: e.target.value})}
+                className="p-2 border rounded w-1/2"
+            />
+
+            <input
+                type="text"
+                placeholder="Quantity (e.g., 2 cups"
+                value={newIngredient.quantity}
+                onChange={(e) => setNewIngredient({...newIngredient, quantity: e.target.value})}
+                className="p-2 border rounded w-1/2 ml-4"
+            />
+
+            <button className="ml-4 bg-green-700 text-white px-4 py2 rounded hover:bg-green-800"
+                    onClick={addIngredient}>
+                Add Ingredient
+            </button>
+
+            {aviableIngredients.length > 0 && (
+                <ul className="list-disc pl-5 mb-6">
+                    {aviableIngredients.map((ingredient, index) => (
+                        <li key={index}>
+                            {ingredient.quantity}{ingredient.name}
                         </li>
                     ))}
+
                 </ul>
-            </div>
+            )}
 
-            <div>
-                <h2>Cauldron</h2>
 
-                {cauldron.length > 0 ? (
-                        <ul>
-                            {cauldron.map((ingredient) => (
-                                <li key={ingredient.id}>
-                                    {ingredient.name}
-                                    <button
-                                        className="ml-4 px-4 py-2 bg-red-600 text-white rounded hover:bg-red-700 transition"
-                                        onClick={() => removeIngredient(ingredient.id)}>
-                                        Remove
-                                    </button>
-                                </li>
-                            ))}
-                            <button
-                                className="ml-4 px-4 py-2 bg-red-600 text-white rounded hover:bg-red-700 transition"
-                                onClick={() => clearCauldron()}>
-                                Clear Cauldron
-                            </button>
-                        </ul>)
-                    : (
-                        <p className="text-green-700">
-                            'The cauldron is empty'
-                        </p>
-                    )}
+            <button className="ml-4 bg-blue-700 text-white px-4 py2 rounded hover:bg-blue-800"
+                    onClick={generateRecipes}>
+                Generate Possible Dishes
+            </button>
 
-            </div>
+            {possibleRecipes.length > 0 && (
+                <div className="mt-6">
+                    <h2 className="text-2xl font-bold mb-4">
+                        Possible dishes
+                    </h2>
+                    <ul className="list-discpl-5">
+                    {possibleRecipes.map((dish, index) => (
+                        <li key={index}>
+                            {dish}
+                        </li>
+                    ))}
+                    </ul>
+                </div>
+            )}
+            
         </div>
-    )
+
+    </div>
+)
 }
 
 export default Cauldron;
