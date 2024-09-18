@@ -1,9 +1,9 @@
 "use client"
 
-import Main from "@/app/Main";
-import Sidebar from "@/app/Sidebar";
-import Navbar from "@/app/Navbar";
-import Footer from "@/app/Footer";
+import Main from "@/app/components/Main";
+import Sidebar from "@/app/components/Sidebar";
+import Navbar from "@/app/components/Navbar";
+import Footer from "@/app/components/Footer";
 
 
 const Home: React.FC = () => {

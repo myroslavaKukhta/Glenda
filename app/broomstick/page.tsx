@@ -18,7 +18,7 @@ const potions: Potion[] = [
     {id: 6, name: "Coffee", ingredients: ["Arabia"], effect: "You feel good!"}
 ]
 
-const Potions: React.FC = () => {
+const Broomstick: React.FC = () => {
     const [drunkPotion, setDrunkPotion] = useState<string | null>(null);
 
     const drinkPotion = (potion: string, effect: string) => {
@@ -69,4 +69,4 @@ const Potions: React.FC = () => {
     )
 }
 
-export default Potions;
+export default Broomstick;
