@@ -1,69 +1,110 @@
 "use client";
 
 import React, {useState} from 'react';
-
-interface Potion {
-    id: number,
-    name: string,
-    ingredients: string[],
-    effect: string
-}
-
-const potions: Potion[] = [
-    {id: 1, name: "Healthing", ingredients: ["Rose petals", "Unicorn tears"], effect: "You feel good!"},
-    {id: 2, name: "Love", ingredients: ["Dragon scale", "Herb of Vitality"], effect: "You feel good!"},
-    {id: 3, name: "Strength", ingredients: ["Moonlight essence", "Mandrake root"], effect: "You feel good!"},
-    {id: 4, name: "Sleep", ingredients: ["Valeriana", "Honey", "Milk"], effect: "You feel good!"},
-    {id: 5, name: "Mana", ingredients: ["Bear claw", "Wolf's fang"], effect: "You feel good!"},
-    {id: 6, name: "Coffee", ingredients: ["Arabia"], effect: "You feel good!"}
-]
+import axios from "axios";
+import {useSelector, useDispatch} from "react-redux";
+import {RootState} from "@/redux/store";
+import {addLocation, removeLocation, clearLocations} from "@/redux/broomstickSlice";
 
 const Broomstick: React.FC = () => {
-    const [drunkPotion, setDrunkPotion] = useState<string | null>(null);
+    const dispatch = useDispatch();
+    const locations = useSelector((state: RootState) => state.broomstick.locations);
 
-    const drinkPotion = (potion: string, effect: string) => {
-        setDrunkPotion(`${potion}: ${effect}`);
+    const [destination, setDestination] = useState("");
+    const [weather, setWeather] = useState(null);
+
+    const fetchWeather = async (place: string) => {
+        try {
+            const response = await axios.get(
+                `https://api.openweathermap.org/data/2.5/weather?q=${place}&appid=8e89d3501adc5a2ff50cb5a545ecb45e&units=metric`
+
+            );
+            setWeather(response.data);
+        } catch (error) {
+            alert('Error fetching weather')
+        }
+    }
+
+    const handleSubmit = async (e: React.FormEvent) => {
+        e.preventDefault();
+        debugger
+        await fetchWeather(destination)
+    }
+
+    const handleSaveLocation = () => {
+        if(weather) {
+            const newLocation = {
+                id: locations.length + 1,
+                name: destination,
+                description: weather.weather[0].description,
+                weather:`${weather.main.temp}°C`
+            };
+            dispatch(addLocation(newLocation));
+            setDestination("");
+            setWeather(null);
+        }
     }
 
     return (
         <div className="bg-blue-100 min-h-screen flex flex-col items-center py-10">
             <h1 className="text-4xl font-bold text-blue-800 mb-10">
-                Glenda`s potion
+                Glenda`s journey
             </h1>
-            <div className="mb-10">
-                <h2 className="text-2xl font-semibold text-blue-700 mb-4">
-                    Aviable potions
-                </h2>
-                <ul className="space-y-4">
-                    {potions.map((potion) => (
-                        <li key={potion.id} className="p-4 bg-blue-200 rounded shadow">
-                            <h3 className="text-blue-700">
-                                {potion.name}
-                            </h3>
-                            <p className="text-blue-700">
-                                Ingredients: {potion.ingredients.join(",")}
-                            </p>
-                            <button
-                                className="mt-2 px-4 py-2 bg-blue-600 text-white rounded hover: bg-blue-700 transition"
-                                onClick={() => (
-                                    drinkPotion(potion.name, potion.effect)
-                                )}>
-                                Drink this
+
+            <form
+                onSubmit={handleSubmit} className="mb-6">
+                <input
+                    type="text"
+                    placeholder="Enter destination (e.g.Lysa Gora)"
+                    value={destination}
+                    onChange={(e) => setDestination(e.target.value)}
+                    className="p-2 border rounded w-full mb-2"
+                />
+                <button className="bg-blue-700 text-white px-4 py-2 rounded hover:bg-blue-800">
+                    Get Weather
+                </button>
+            </form>
+
+            {weather && (
+                <div className="mt-6">
+                    <h2 className="text-2xl font-bold mb-4">
+                        Weather in {weather.name}
+                    </h2>
+                    <p>Temperature: {weather.main.temp}°C</p>
+                    <p>Weather: {weather.weather[0].description}</p>
+                    <button
+                    className="mt-4 bg-green-700 text-white px-4py-2 rounded hover:bg-green-800"
+                    onClick={handleSaveLocation}>
+                        Save Location
+                    </button>
+                </div>
+            )}
+
+<h2 className="text-2xl font-bold mt-10 mb-6">
+    Saved Locations
+</h2>
+            {locations.length > 0 ?(
+                <ul className="list-disc pl-5">
+                    {locations.map((location) => (
+                        <li key={location.id} className="mb-2">
+                            <strong>{location.name}</strong>
+                            -{location.weather} ({location.description})
+                            <button className="ml-4 text-red-600"
+                            onClick={()=> dispatch(removeLocation(location.id))}>
+                                Remove
                             </button>
                         </li>
                     ))}
                 </ul>
-            </div>
-            {drunkPotion && (
-                <div className="mt-8 p-4 bg-blue-300 rounded shadow">
-                    <h3 className="text-xl font-semibold text-blue-900">
-                        You drank a potion!
-                    </h3>
-                    <p className="text-blue-700">
-                        {drunkPotion}
-                    </p>
-                </div>
+            ) : (<p>No saved locations </p>)}
 
+            {locations.length > 0 && (
+                <button
+                className="mt-6 bg-red-700 text-white px-4 py-2 rounded hover:bg-red-800"
+                onClick={()=> dispatch(clearLocations())}>
+                    Clear all locations
+
+                </button>
             )}
         </div>
     )

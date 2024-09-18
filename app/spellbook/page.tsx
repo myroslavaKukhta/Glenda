@@ -3,21 +3,32 @@
 import React, {useState} from 'react';
 import {useDispatch, useSelector} from "react-redux";
 import {RootState} from "@/redux/store";
-import {addBook, toggleBooksStatus} from "@/redux/spellbookSlice";
+import {addBook, removeBook, toggleBooksStatus} from "@/redux/spellbookSlice";
+
+interface Book {
+    title: string,
+    author: string,
+    description?: string
+}
 
 const SpellBook: React.FC = () => {
     const dispatch = useDispatch();
     const books = useSelector((state: RootState) => state.spellbook.books);
 
-    const [newBook, setNewBook] = useState({title: "", author: ""});
+    const [newBook, setNewBook] = useState<Book>
+    ({title: "", author: "", description: ""});
 
     const handleAddBook = () => {
         if (newBook.title && newBook.author) {
             dispatch(addBook({...newBook, completed: false}));
-            setNewBook({title: "", author: ""})
+            setNewBook({title: "", author: "", description: ""})
         } else {
             alert('Enter title and author')
         }
+    }
+
+    const removeSelectedBook = (title:string) => {
+        dispatch(removeBook(title))
     }
 
     return (
@@ -43,6 +54,12 @@ const SpellBook: React.FC = () => {
                     className="p-2 border rounded w-1/2 ml-4"
                 />
 
+                <textarea
+                    placeholder="Description"
+                    value={newBook.description}
+                    onChange={(e) => setNewBook({...newBook, description: e.target.value})}
+                    className="p-2 border rounded w-full mb-2"/>
+
                 <button
                     className="ml-4 bg-purple-700 text-white px-4 py-2 rounded hover: bg-purple-800"
                     onClick={handleAddBook}
@@ -55,10 +72,17 @@ const SpellBook: React.FC = () => {
                         {books.map((book, index) => (
                             <li key={index}>
                                 {book.title} {book.author}
+                                <p>Description</p>
                                 <button
                                     className="ml-4 bg-blue-500text-white px-2 py-1 rounded"
                                     onClick={() => dispatch(toggleBooksStatus(index))}>
                                     {book.completed ? 'Mark as Unread' : 'Mark as Read'}
+                                </button>
+
+                                <button
+                                    className="ml-4 bg-blue-500text-white px-2 py-1 rounded"
+                                    onClick={() => removeSelectedBook(book.title)}>
+                                    Remove
                                 </button>
                             </li>
                         ))}

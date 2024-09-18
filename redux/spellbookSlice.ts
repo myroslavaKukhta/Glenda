@@ -3,7 +3,8 @@ import {createSlice, PayloadAction} from "@reduxjs/toolkit";
 interface Book {
     title: string,
     author: string,
-    completed: boolean
+    completed: boolean,
+    description?: string
 }
 
 interface SpellbookState {
@@ -22,6 +23,10 @@ const spellbookSlice = createSlice({
             state.books.push(action.payload)
         },
 
+        removeBook: (state, action: PayloadAction<string>) => {
+            state.books = state.books.filter((book) => book.title != action.payload);
+        },
+
         toggleBooksStatus: (state, action: PayloadAction<number>) => {
             const book = state.books[action.payload];
             book.completed = !book.completed;
@@ -29,5 +34,5 @@ const spellbookSlice = createSlice({
     }
 });
 
-export const {addBook, toggleBooksStatus} = spellbookSlice.actions;
+export const {addBook, removeBook, toggleBooksStatus} = spellbookSlice.actions;
 export default spellbookSlice.reducer;

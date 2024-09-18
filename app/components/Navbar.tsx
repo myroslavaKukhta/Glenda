@@ -22,9 +22,9 @@ const Navbar: React.FC = () => {
                             </Link>
                         </li>
                         <li>
-                            <Link href="/potions"
+                            <Link href="/broomstick"
                                   className="text-2xl font-bold hover:text-blue-400 text-white transition-colors duration-300">
-                                Potions
+                                Broomstick
                             </Link>
                         </li>
                     </ul>
