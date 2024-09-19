@@ -27,6 +27,11 @@ const Navbar: React.FC = () => {
                                 Broomstick
                             </Link>
                         </li>
+
+                        <Link href="/altar"
+                              className="text-2xl font-bold hover:text-gray-400 text-white transition-colors duration-300">
+                            Altar
+                        </Link>
                     </ul>
                 </div>
             </nav>

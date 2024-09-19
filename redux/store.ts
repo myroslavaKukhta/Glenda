@@ -3,14 +3,14 @@
 import { configureStore} from "@reduxjs/toolkit";
 import cauldronReducer from './cauldronSlice';
 import spellbookReducer from './spellbookSlice';
-import workaltarReducer from './work-altarSlice';
+import altarReducer from './altarSlice';
 import broomstickReducer from './broomstickSlice';
 
 export const store = configureStore({
     reducer: {
         cauldron: cauldronReducer,
         spellbook: spellbookReducer,
-        workaltar: workaltarReducer,
+        altar: altarReducer,
         broomstick: broomstickReducer
     }
 })
