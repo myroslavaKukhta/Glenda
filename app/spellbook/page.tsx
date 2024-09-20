@@ -5,6 +5,7 @@ import {useDispatch, useSelector} from "react-redux";
 import {RootState} from "@/redux/store";
 import {addBook, removeBook, toggleBooksStatus} from "@/redux/spellbookSlice";
 import Navbar from "@/app/components/Navbar";
+import Sidebar from "@/app/components/Sidebar";
 
 interface Book {
     title: string,
@@ -13,6 +14,13 @@ interface Book {
 }
 
 const SpellBook: React.FC = () => {
+    const sidebarItems = [
+        {label: 'Science', href: '/spellbook/science'},
+        {label: 'For rest', href: '/spellbook/rest'},
+        {label: 'In process', href: '/spellbook/process'},
+        {label: 'Catalog', href: '/spellbook/catalog'}
+    ]
+
     const dispatch = useDispatch();
     const books = useSelector((state: RootState) => state.spellbook.books);
 
@@ -35,6 +43,7 @@ const SpellBook: React.FC = () => {
     return (
         <div className="bg-purple-100 min-h-screen flex flex-col items-center py-10">
             <Navbar/>
+            <Sidebar items={sidebarItems}/>
             <h1 className="text-4xl font-bold text-purple-800 mb-10">
                 Glenda`s spellbook
             </h1>

@@ -6,8 +6,16 @@ import {useSelector, useDispatch} from "react-redux";
 import {RootState} from "@/redux/store";
 import {addLocation, removeLocation, clearLocations} from "@/redux/broomstickSlice";
 import Navbar from "@/app/components/Navbar";
+import Sidebar from "@/app/components/Sidebar";
 
 const Broomstick: React.FC = () => {
+    const sidebarItems = [
+        {label: 'Training', href: '/broomstick/training'},
+        {label: 'Culture journey', href: '/altar/culture'},
+        {label: 'Climbing', href: '/altar/climb'},
+        {label: 'Dreams', href: '/altar/dream'}
+    ]
+
     const dispatch = useDispatch();
     const locations = useSelector((state: RootState) => state.broomstick.locations);
 
@@ -69,6 +77,7 @@ const Broomstick: React.FC = () => {
 return (
     <div className="bg-blue-100 min-h-screen flex flex-col items-center py-10">
         <Navbar/>
+        <Sidebar items={sidebarItems}/>
         <h1 className="text-4xl font-bold text-blue-800 mb-10">
             Glenda`s journey
         </h1>

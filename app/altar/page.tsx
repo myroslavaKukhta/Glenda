@@ -5,12 +5,20 @@ import {useDispatch, useSelector} from "react-redux";
 import {RootState} from "@/redux/store";
 import {addTask, removeTask, toggleTaskStatus, clearTasks} from "@/redux/altarSlice";
 import Navbar from "@/app/components/Navbar";
+import Sidebar from "@/app/components/Sidebar";
 
 interface NewTask {
     title: string,
     priority: "low" | "medium" | "high"
 }
 const Altar: React.FC = () => {
+    const sidebarItems = [
+        {label: 'Calendar', href: '/altar/training'},
+        {label: 'Todo', href: '/altar/culture'},
+        {label: 'In process', href: '/altar/process'},
+        {label: 'Finance', href: '/altar/dream'}
+    ]
+
     const dispatch = useDispatch();
     const tasks = useSelector((state: RootState) => state.altar.tasks)
 
@@ -44,6 +52,7 @@ const Altar: React.FC = () => {
     return (
         <div className="min-h-screen p-6 bg-gray-100">
             <Navbar/>
+            <Sidebar items={sidebarItems}/>
             <h1 className="text-4xl font-bold mb-6">
                 Work Altar
             </h1>

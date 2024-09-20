@@ -7,13 +7,18 @@ import Footer from "@/app/components/Footer";
 
 
 const Home: React.FC = () => {
-
+    const sidebarItems = [
+        {label: 'Grimyar', href: '/grimyar'},
+        {label: 'Gallery', href: '/gallery'},
+        {label: 'Familiar', href: '/familiar'},
+        {label: 'About project', href: '/about'}
+    ]
 
     return (
         <div className="bg-green-100 min-h-screen flex flex-col items-center">
             <Navbar/>
             <Main/>
-            <Sidebar/>
+            <Sidebar items={sidebarItems}/>
             <Footer/>
 
         </div>

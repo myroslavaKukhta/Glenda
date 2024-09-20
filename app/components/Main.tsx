@@ -18,6 +18,12 @@ const houseImages: Images[] = [
 ]
 
 const Main: React.FC = () => {
+    const sidebarItems = [
+        {label: 'Calendar', href: '/altar/training'},
+        {label: 'Todo', href: '/altar/culture'},
+        {label: 'In climb', href: '/altar/climb'},
+        {label: 'Finance', href: '/altar/dream'}
+    ]
     const [currentHomeImage, setCurrentHomeImage] = useState(0);
 
     const nextHomeImage = () => {
