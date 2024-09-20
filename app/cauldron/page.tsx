@@ -4,9 +4,17 @@ import React, { useState} from 'react';
 import {useDispatch, useSelector} from "react-redux";
 import { RootState } from '@/redux/store';
 import { addIngredient, generateRecipes, clearCauldron} from "@/redux/cauldronSlice";
+import Navbar from "@/app/components/Navbar";
+import Sidebar from "@/app/components/Sidebar";
 
 
 const Cauldron: React.FC = () => {
+    const sidebarItems = [
+        {label: 'Recipes', href: '/cauldron/recipes'},
+        {label: 'Aviable ingredients', href: '/cauldron/ingredients'},
+        {label: 'New Recipe', href: '/cauldron/new'}
+    ]
+
 const dispatch = useDispatch();
 const ingredients = useSelector((state: RootState) => state.cauldron.ingredients);
 const possibleRecipes = useSelector((state: RootState) => state.cauldron.possibleRecipes)
@@ -36,6 +44,8 @@ const handleGenerateRecipes = () => {
 
 return (
     <div className="p-8 bg-greeen-100 min-h-screen">
+        <Navbar/>
+        <Sidebar items={sidebarItems}/>
         <h1 className="text-4xl font-bold mb-6">
             Cauldron: enter your ingredients
         </h1>

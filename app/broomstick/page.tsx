@@ -5,6 +5,7 @@ import axios from "axios";
 import {useSelector, useDispatch} from "react-redux";
 import {RootState} from "@/redux/store";
 import {addLocation, removeLocation, clearLocations} from "@/redux/broomstickSlice";
+import Navbar from "@/app/components/Navbar";
 
 const Broomstick: React.FC = () => {
     const dispatch = useDispatch();
@@ -67,6 +68,7 @@ const Broomstick: React.FC = () => {
 
 return (
     <div className="bg-blue-100 min-h-screen flex flex-col items-center py-10">
+        <Navbar/>
         <h1 className="text-4xl font-bold text-blue-800 mb-10">
             Glenda`s journey
         </h1>

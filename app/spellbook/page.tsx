@@ -4,6 +4,7 @@ import React, {useState} from 'react';
 import {useDispatch, useSelector} from "react-redux";
 import {RootState} from "@/redux/store";
 import {addBook, removeBook, toggleBooksStatus} from "@/redux/spellbookSlice";
+import Navbar from "@/app/components/Navbar";
 
 interface Book {
     title: string,
@@ -33,6 +34,7 @@ const SpellBook: React.FC = () => {
 
     return (
         <div className="bg-purple-100 min-h-screen flex flex-col items-center py-10">
+            <Navbar/>
             <h1 className="text-4xl font-bold text-purple-800 mb-10">
                 Glenda`s spellbook
             </h1>
